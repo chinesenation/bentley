@@ -23,7 +23,7 @@ var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 			while (cur && cur.nodeType !== 9 && (until === undefined || cur.nodeType !== 1 || !jQuery(cur).is(until))) {
 				if (cur.nodeType === 1) {
 					matched.push(cur);
-				}
+			}
 				cur = cur[dir];
 			}
 			return matched;
@@ -35,8 +35,8 @@ var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 			for (; n; n = n.nextSibling) {
 				if (n.nodeType === 1 && n !== elem) {
 					r.push(n);
-				}
 			}
+		}
 
 			return r;
 		}

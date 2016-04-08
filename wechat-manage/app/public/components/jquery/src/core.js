@@ -240,7 +240,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 
 		try {
 			// Not own constructor property must be Object
-			if ( obj.constructor && !hasOwn.call(obj, "constructor") && !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
+			if (obj.constructor && !hasOwn.call(obj, "constructor") && !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
 				return false;
 			}
 		} catch ( e ) {
@@ -318,7 +318,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 
 						if (value === false) {
 							break;
-						}
+					}
 					}
 			}
 
@@ -338,7 +338,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 
 						if (value === false) {
 							break;
-						}
+					}
 					}
 			}
 		}

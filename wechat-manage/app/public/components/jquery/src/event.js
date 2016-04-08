@@ -942,10 +942,10 @@ jQuery.Event.prototype = {
 					// ( types-Object, data )
 					data = data || selector;
 					selector = undefined;
-				}
+			}
 				for (type in types) {
 					this.on(type, selector, data, types[type], one);
-				}
+			}
 				return this;
 			}
 
@@ -963,7 +963,7 @@ jQuery.Event.prototype = {
 					fn = data;
 					data = selector;
 					selector = undefined;
-				}
+			}
 			}
 			if (fn === false) {
 				fn = returnFalse;

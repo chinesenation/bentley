@@ -1,6 +1,6 @@
 ﻿/**
  * jQuery EasyUI 1.4.5
- *
+ * 
  * Copyright (c) 2009-2016 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
@@ -159,7 +159,7 @@
 		var opts = state.options;
 		state.data = opts.loadFilter.call(target, data);
 
-		opts.view.render.call(opts.view, target, $(target).combo('panel'), state.data);
+		opts.view.render.call(opts.view, target, $(target).combo('panel'), state.data);		
 
 		var vv = $(target).combobox('getValues');
 		$.easyui.forEach(state.data, false, function (row) {
@@ -503,7 +503,7 @@
 
 			COMBOBOX_SERNO++;
 			state.itemIdPrefix = '_easyui_combobox_i' + COMBOBOX_SERNO;
-			state.groupIdPrefix = '_easyui_combobox_g' + COMBOBOX_SERNO;
+			state.groupIdPrefix = '_easyui_combobox_g' + COMBOBOX_SERNO;		
 			state.groups = [];
 
 			var dd = [];

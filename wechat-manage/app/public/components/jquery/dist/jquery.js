@@ -293,7 +293,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 
 		try {
 			// Not own constructor property must be Object
-			if ( obj.constructor && !hasOwn.call(obj, "constructor") && !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
+			if (obj.constructor && !hasOwn.call(obj, "constructor") && !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
 				return false;
 			}
 		} catch ( e ) {
@@ -371,7 +371,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 
 						if (value === false) {
 							break;
-						}
+					}
 					}
 			}
 
@@ -391,7 +391,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 
 						if (value === false) {
 							break;
-						}
+					}
 					}
 			}
 		}
@@ -2900,7 +2900,7 @@ var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 			while (cur && cur.nodeType !== 9 && (until === undefined || cur.nodeType !== 1 || !jQuery(cur).is(until))) {
 				if (cur.nodeType === 1) {
 					matched.push(cur);
-				}
+			}
 				cur = cur[dir];
 			}
 			return matched;
@@ -2912,8 +2912,8 @@ var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 			for (; n; n = n.nextSibling) {
 				if (n.nodeType === 1 && n !== elem) {
 					r.push(n);
-				}
 			}
+		}
 
 			return r;
 		}
@@ -3073,6 +3073,7 @@ function sibling( cur, dir ) {
 	};
 	});
 	var rnotwhite = (/\S+/g);
+
 
 
 // String to Object options format cache
@@ -5202,10 +5203,10 @@ jQuery.Event.prototype = {
 					// ( types-Object, data )
 					data = data || selector;
 					selector = undefined;
-				}
+			}
 				for (type in types) {
 					this.on(type, selector, data, types[type], one);
-				}
+			}
 				return this;
 			}
 
@@ -5223,7 +5224,7 @@ jQuery.Event.prototype = {
 					fn = data;
 					data = selector;
 					selector = undefined;
-				}
+			}
 			}
 			if (fn === false) {
 				fn = returnFalse;
@@ -5303,8 +5304,8 @@ jQuery.Event.prototype = {
 				safeFrag.createElement(
 					list.pop()
 				);
-			}
 		}
+	}
 		return safeFrag;
 	}
 
@@ -5359,9 +5360,9 @@ jQuery.Event.prototype = {
 					found.push(elem);
 				} else {
 					jQuery.merge(found, getAll(elem, tag));
-				}
 			}
 		}
+	}
 
 		return tag === undefined || tag && jQuery.nodeName(context, tag) ?
 			jQuery.merge([context], found) :
@@ -5372,7 +5373,7 @@ jQuery.Event.prototype = {
 	function fixDefaultChecked(elem) {
 		if (rcheckableType.test(elem.type)) {
 			elem.defaultChecked = elem.checked;
-		}
+	}
 	}
 
 // Support: IE<8
@@ -5407,7 +5408,7 @@ function restoreScript( elem ) {
 			i = 0;
 		for (; (elem = elems[i]) != null; i++) {
 			jQuery._data(elem, "globalEval", !refElements || jQuery._data(refElements[i], "globalEval"));
-		}
+	}
 	}
 
 function cloneCopyEvent( src, dest ) {
@@ -5622,8 +5623,8 @@ function fixCloneNodeIssues( src, dest ) {
 							while (j--) {
 								if (jQuery.nodeName((tbody = elem.childNodes[j]), "tbody") && !tbody.childNodes.length) {
 									elem.removeChild(tbody);
-								}
 							}
+						}
 						}
 
 						jQuery.merge(nodes, tmp.childNodes);
@@ -5634,12 +5635,12 @@ function fixCloneNodeIssues( src, dest ) {
 						// Fix #12392 for oldIE
 						while (tmp.firstChild) {
 							tmp.removeChild(tmp.firstChild);
-						}
+					}
 
 						// Remember the top-level container for proper cleanup
 						tmp = safe.lastChild;
-					}
 				}
+			}
 			}
 
 			// Fix #11356: Clear elements from fragment
@@ -5678,9 +5679,9 @@ function fixCloneNodeIssues( src, dest ) {
 					while ((elem = tmp[j++])) {
 						if (rscriptType.test(elem.type || "")) {
 							scripts.push(elem);
-						}
 					}
 				}
+			}
 			}
 
 			tmp = null;
@@ -5798,9 +5799,9 @@ function fixCloneNodeIssues( src, dest ) {
 				if (elem.parentNode) {
 					if (keepData && jQuery.contains(elem.ownerDocument, elem)) {
 						setGlobalEval(getAll(elem, "script"));
-					}
-					elem.parentNode.removeChild(elem);
 				}
+					elem.parentNode.removeChild(elem);
+			}
 			}
 
 			return this;
@@ -5855,7 +5856,7 @@ function fixCloneNodeIssues( src, dest ) {
 			// See if we can take a shortcut and just use innerHTML
 			if ( typeof value === "string" && !rnoInnerhtml.test( value ) &&
 				( support.htmlSerialize || !rnoshimcache.test( value )  ) &&
-				( support.leadingWhitespace || !rleadingWhitespace.test( value ) ) && !wrapMap[(rtagName.exec(value) || ["", ""])[1].toLowerCase()]) {
+				( support.leadingWhitespace || !rleadingWhitespace.test(value) ) && !wrapMap[(rtagName.exec(value) || ["", ""])[1].toLowerCase()]) {
 
 				value = value.replace(rxhtmlTag, "<$1></$2>");
 
@@ -5953,8 +5954,8 @@ function fixCloneNodeIssues( src, dest ) {
 							// Keep references to cloned scripts for later restoration
 							if (hasScripts) {
 								jQuery.merge(scripts, getAll(node, "script"));
-							}
 						}
+					}
 
 						callback.call(this[i], node, i);
 					}
@@ -5974,17 +5975,17 @@ function fixCloneNodeIssues( src, dest ) {
 									// Optional AJAX dependency, but won't run scripts if not present
 									if (jQuery._evalUrl) {
 										jQuery._evalUrl(node.src);
-									}
+								}
 								} else {
 									jQuery.globalEval(( node.text || node.textContent || node.innerHTML || "" ).replace(rcleanScript, ""));
-								}
 							}
 						}
 					}
+				}
 
 					// Fix #11809: Avoid leaking memory
 					fragment = first = null;
-				}
+			}
 			}
 
 			return this;
@@ -6329,7 +6330,7 @@ function addGetHookIf( conditionFn, hookFn ) {
 			pixelPosition: function () {
 				if (pixelPositionVal == null) {
 					computeStyleTests();
-				}
+			}
 				return pixelPositionVal;
 			},
 
@@ -6337,7 +6338,7 @@ function addGetHookIf( conditionFn, hookFn ) {
 			reliableMarginRight: function () {
 				if (reliableMarginRightVal == null) {
 					computeStyleTests();
-				}
+			}
 				return reliableMarginRightVal;
 			}
 		});
@@ -6394,7 +6395,7 @@ function addGetHookIf( conditionFn, hookFn ) {
 				reliableMarginRightVal = !parseFloat(( window.getComputedStyle(contents, null) || {} ).marginRight);
 
 				div.removeChild(contents);
-			}
+		}
 
 			// Support: IE8
 			// Check if table cells still have offsetWidth/Height when they are set
@@ -8024,10 +8025,10 @@ var nodeHook, boolHook,
 						elem.setAttribute("type", value);
 						if (val) {
 							elem.value = val;
-						}
-						return value;
 					}
+						return value;
 				}
+			}
 			}
 	}
 	});

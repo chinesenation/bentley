@@ -67,7 +67,7 @@ define([
 				delete div.test;
 			} catch (e) {
 				support.deleteExpando = false;
-			}
+		}
 		}
 	})();
 

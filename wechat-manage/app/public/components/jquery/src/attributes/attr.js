@@ -116,10 +116,10 @@ var nodeHook, boolHook,
 						elem.setAttribute("type", value);
 						if (val) {
 							elem.value = val;
-						}
-						return value;
 					}
+						return value;
 				}
+			}
 			}
 	}
 	});
