@@ -100,8 +100,9 @@
 //				}
 //			});
 //		}
-		
-		setSelected(target, opts.selected)
+
+		setSelected(target, opts.selected);
+		;
 		setDisabled(target, opts.disabled);
 	}
 	
