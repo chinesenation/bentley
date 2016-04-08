@@ -1,10 +1,14 @@
 define([
+	"../var/document",
 	"../var/support"
-], function (support) {
+], function (document, support) {
 
 	(function () {
-		// Minified: var a,b,c,d,e
-		var input, div, select, a, opt;
+		var a,
+			input = document.createElement("input"),
+			div = document.createElement("div"),
+			select = document.createElement("select"),
+			opt = select.appendChild(document.createElement("option"));
 
 	// Setup
 	div = document.createElement( "div" );
@@ -12,14 +16,18 @@ define([
 	div.innerHTML = "  <link/><table></table><a href='/a'>a</a><input type='checkbox'/>";
 		a = div.getElementsByTagName("a")[0];
 
-	// First batch of tests.
-		select = document.createElement("select");
-		opt = select.appendChild(document.createElement("option"));
-		input = div.getElementsByTagName("input")[0];
+		// Support: Windows Web Apps (WWA)
+		// `type` must use .setAttribute for WWA (#14901)
+		input.setAttribute("type", "checkbox");
+		div.appendChild(input);
 
+		a = div.getElementsByTagName("a")[0];
+
+		// First batch of tests.
 	a.style.cssText = "top:1px";
 
-		// Test setAttribute on camelCase class. If it works, we need attrFixes when doing get/setAttribute (ie6/7)
+		// Test setAttribute on camelCase class.
+		// If it works, we need attrFixes when doing get/setAttribute (ie6/7)
 	support.getSetAttribute = div.className !== "t";
 
 	// Get the style information from getAttribute

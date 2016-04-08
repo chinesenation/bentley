@@ -1,15 +1,17 @@
 define([
 	"../core",
+	"../var/document",
 	"../ajax"
-], function (jQuery) {
+], function (jQuery, document) {
 
 // Install script dataType
 	jQuery.ajaxSetup({
 	accepts: {
-		script: "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"
+		script: "text/javascript, application/javascript, " +
+		"application/ecmascript, application/x-ecmascript"
 	},
 	contents: {
-		script: /(?:java|ecma)script/
+		script: /\b(?:java|ecma)script\b/
 	},
 	converters: {
 		"text script": function( text ) {

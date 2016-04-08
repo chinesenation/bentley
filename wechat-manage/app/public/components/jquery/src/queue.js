@@ -59,7 +59,8 @@ define([
 		}
 	},
 
-		// not intended for public consumption - generates a queueHooks object, or returns the current one
+		// not intended for public consumption - generates a queueHooks object,
+		// or returns the current one
 	_queueHooks: function( elem, type ) {
 		var key = type + "queueHooks";
 		return jQuery._data( elem, key ) || jQuery._data( elem, key, {
@@ -106,6 +107,7 @@ define([
 	clearQueue: function( type ) {
 		return this.queue( type || "fx", [] );
 	},
+
 	// Get a promise resolved when queues of a certain type
 	// are emptied (fx is the type by default)
 	promise: function( type, obj ) {

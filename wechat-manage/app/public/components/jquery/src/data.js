@@ -2,13 +2,14 @@ define([
 	"./core",
 	"./var/deletedIds",
 	"./data/support",
-	"./data/accepts"
-], function (jQuery, deletedIds, support) {
+	"./data/var/acceptData"
+], function (jQuery, deletedIds, support, acceptData) {
 
 var rbrace = /^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,
 	rmultiDash = /([A-Z])/g;
 
 function dataAttr( elem, key, data ) {
+
 	// If nothing was found internally, try to fetch any
 	// data from the HTML5 data-* attribute
 	if ( data === undefined && elem.nodeType === 1 ) {
@@ -22,6 +23,7 @@ function dataAttr( elem, key, data ) {
 				data = data === "true" ? true :
 					data === "false" ? false :
 					data === "null" ? null :
+
 					// Only convert to a number if it doesn't change the string
 					+data + "" === data ? +data :
 					rbrace.test( data ) ? jQuery.parseJSON( data ) :
@@ -58,7 +60,7 @@ function isEmptyDataObject( obj ) {
 }
 
 function internalData( elem, name, data, pvt /* Internal Use Only */ ) {
-	if (!jQuery.acceptData(elem)) {
+	if (!acceptData(elem)) {
 		return;
 	}
 
@@ -79,11 +81,13 @@ function internalData( elem, name, data, pvt /* Internal Use Only */ ) {
 
 	// Avoid doing any more work than we need to when trying to get data on an
 	// object that has no data at all
-	if ((!id || !cache[id] || (!pvt && !cache[id].data)) && data === undefined && typeof name === "string") {
+	if (( !id || !cache[id] || ( !pvt && !cache[id].data ) ) &&
+		data === undefined && typeof name === "string") {
 		return;
 	}
 
 	if ( !id ) {
+
 		// Only DOM nodes need a new unique ID for each element since their data
 		// ends up in the global cache
 		if ( isNode ) {
@@ -94,6 +98,7 @@ function internalData( elem, name, data, pvt /* Internal Use Only */ ) {
 	}
 
 	if ( !cache[ id ] ) {
+
 		// Avoid exposing jQuery metadata on plain JS objects when the object
 		// is serialized using JSON.stringify
 		cache[ id ] = isNode ? {} : { toJSON: jQuery.noop };
@@ -147,7 +152,7 @@ function internalData( elem, name, data, pvt /* Internal Use Only */ ) {
 }
 
 function internalRemoveData( elem, name, pvt ) {
-	if (!jQuery.acceptData(elem)) {
+	if (!acceptData(elem)) {
 		return;
 	}
 
@@ -187,6 +192,7 @@ function internalRemoveData( elem, name, pvt ) {
 					}
 				}
 			} else {
+
 				// If "name" is an array of keys...
 				// When data is initially created, via ("key", "val") signature,
 				// keys will be converted to camelCase.
@@ -230,9 +236,9 @@ function internalRemoveData( elem, name, pvt ) {
 		/* jshint eqeqeq: true */
 		delete cache[ id ];
 
-		// When all else fails, null
+		// When all else fails, undefined
 	} else {
-		cache[id] = null;
+		cache[id] = undefined;
 	}
 }
 
@@ -244,6 +250,7 @@ function internalRemoveData( elem, name, pvt ) {
 	noData: {
 		"applet ": true,
 		"embed ": true,
+
 		// ...but Flash objects (which have this classid) *can* handle expandos
 		"object ": "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
 	},

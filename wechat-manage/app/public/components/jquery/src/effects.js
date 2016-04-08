@@ -1,79 +1,31 @@
 define([
 	"./core",
-	"./var/pnum",
+	"./effects/support",
+	"./var/rcssNum",
+	"./var/rnotwhite",
 	"./css/var/cssExpand",
 	"./css/var/isHidden",
+	"./css/adjustCSS",
 	"./css/defaultDisplay",
-	"./effects/support",
 
+	"./var/document",
 	"./core/init",
 	"./effects/Tween",
 	"./queue",
 	"./css",
 	"./deferred",
 	"./traversing"
-], function (jQuery, pnum, cssExpand, isHidden, defaultDisplay, support) {
+], function (jQuery, support, rcssNum, rnotwhite,
+			 cssExpand, isHidden, adjustCSS, defaultDisplay) {
 
 var
 	fxNow, timerId,
 	rfxtypes = /^(?:toggle|show|hide)$/,
-	rfxnum = new RegExp("^(?:([+-])=|)(" + pnum + ")([a-z%]*)$", "i"),
-	rrun = /queueHooks$/,
-	animationPrefilters = [defaultPrefilter],
-	tweeners = {
-		"*": [function (prop, value) {
-			var tween = this.createTween(prop, value),
-				target = tween.cur(),
-				parts = rfxnum.exec(value),
-				unit = parts && parts[3] || ( jQuery.cssNumber[prop] ? "" : "px" ),
-
-			// Starting value computation is required for potential unit mismatches
-				start = ( jQuery.cssNumber[prop] || unit !== "px" && +target ) &&
-					rfxnum.exec(jQuery.css(tween.elem, prop)),
-				scale = 1,
-				maxIterations = 20;
-
-			if (start && start[3] !== unit) {
-				// Trust units reported by jQuery.css
-				unit = unit || start[3];
-
-				// Make sure we update the tween properties later on
-				parts = parts || [];
-
-				// Iteratively approximate from a nonzero starting point
-				start = +target || 1;
-
-				do {
-					// If previous iteration zeroed out, double until we get *something*
-					// Use a string for doubling factor so we don't accidentally see scale as unchanged below
-					scale = scale || ".5";
-
-					// Adjust and apply
-					start = start / scale;
-					jQuery.style(tween.elem, prop, start + unit);
-
-					// Update scale, tolerating zero or NaN from tween.cur()
-					// And breaking the loop if scale is unchanged or perfect, or if we've just had enough
-				} while (scale !== (scale = tween.cur() / target) && scale !== 1 && --maxIterations);
-			}
-
-			// Update tween properties
-			if (parts) {
-				start = tween.start = +start || +target || 0;
-				tween.unit = unit;
-				// If a +=/-= token was provided, we're doing a relative animation
-				tween.end = parts[1] ?
-				start + ( parts[1] + 1 ) * parts[2] :
-					+parts[2];
-			}
-
-			return tween;
-		}]
-	};
+	rrun = /queueHooks$/;
 
 // Animations created synchronously will run synchronously
 function createFxNow() {
-	setTimeout(function () {
+	window.setTimeout(function () {
 		fxNow = undefined;
 	});
 	return ( fxNow = jQuery.now() );
@@ -102,11 +54,11 @@ function genFx( type, includeWidth ) {
 
 function createTween( value, prop, animation ) {
 	var tween,
-		collection = ( tweeners[prop] || [] ).concat(tweeners["*"]),
+		collection = ( Animation.tweeners[prop] || [] ).concat(Animation.tweeners["*"]),
 		index = 0,
 		length = collection.length;
 	for ( ; index < length; index++ ) {
-		if ((tween = collection[index].call(animation, prop, value))) {
+		if (( tween = collection[index].call(animation, prop, value) )) {
 
 			// we're done with this property
 			return tween;
@@ -138,6 +90,7 @@ function defaultPrefilter( elem, props, opts ) {
 		hooks.unqueued++;
 
 		anim.always(function () {
+
 			// doing this makes sure that the complete handler will be called
 			// before this completes
 			anim.always(function () {
@@ -151,6 +104,7 @@ function defaultPrefilter( elem, props, opts ) {
 
 	// height/width overflow pass
 	if ( elem.nodeType === 1 && ( "height" in props || "width" in props ) ) {
+
 		// Make sure that nothing sneaks out
 		// Record all 3 overflow attributes because IE does not
 		// change the overflow attribute when overflowX and
@@ -196,7 +150,8 @@ function defaultPrefilter( elem, props, opts ) {
 			toggle = toggle || value === "toggle";
 			if ( value === ( hidden ? "hide" : "show" ) ) {
 
-				// If there is dataShow left over from a stopped hide or show and we are going to proceed with show, we should pretend to be hidden
+				// If there is dataShow left over from a stopped hide or show
+				// and we are going to proceed with show, we should pretend to be hidden
 				if ( value === "show" && dataShow && dataShow[ prop ] !== undefined ) {
 					hidden = true;
 				} else {
@@ -251,7 +206,7 @@ function defaultPrefilter( elem, props, opts ) {
 		}
 
 	// If this is a noop like .hide().hide(), restore an overwritten display value
-	} else if ((display === "none" ? defaultDisplay(elem.nodeName) : display) === "inline") {
+	} else if (( display === "none" ? defaultDisplay(elem.nodeName) : display ) === "inline") {
 		style.display = display;
 	}
 }
@@ -297,8 +252,9 @@ function Animation( elem, properties, options ) {
 	var result,
 		stopped,
 		index = 0,
-		length = animationPrefilters.length,
+		length = Animation.prefilters.length,
 		deferred = jQuery.Deferred().always( function() {
+
 			// don't match elem in the :animated selector
 			delete tick.elem;
 		}),
@@ -308,7 +264,9 @@ function Animation( elem, properties, options ) {
 			}
 			var currentTime = fxNow || createFxNow(),
 				remaining = Math.max( 0, animation.startTime + animation.duration - currentTime ),
-			// archaic crash bug won't allow us to use 1 - ( 0.5 || 0 ) (#12497)
+
+			// Support: Android 2.3
+			// Archaic crash bug won't allow us to use `1 - ( 0.5 || 0 )` (#12497)
 				temp = remaining / animation.duration || 0,
 				percent = 1 - temp,
 				index = 0,
@@ -330,7 +288,10 @@ function Animation( elem, properties, options ) {
 		animation = deferred.promise({
 			elem: elem,
 			props: jQuery.extend( {}, properties ),
-			opts: jQuery.extend(true, {specialEasing: {}}, options),
+			opts: jQuery.extend(true, {
+				specialEasing: {},
+				easing: jQuery.easing._default
+			}, options),
 			originalProperties: properties,
 			originalOptions: options,
 			startTime: fxNow || createFxNow(),
@@ -344,6 +305,7 @@ function Animation( elem, properties, options ) {
 			},
 			stop: function( gotoEnd ) {
 				var index = 0,
+
 					// if we are going to the end, we want to run all the tweens
 					// otherwise we skip this part
 					length = gotoEnd ? animation.tweens.length : 0;
@@ -358,6 +320,7 @@ function Animation( elem, properties, options ) {
 				// resolve when we played the last frame
 				// otherwise, reject
 				if ( gotoEnd ) {
+					deferred.notifyWith(elem, [animation, 1, 0]);
 					deferred.resolveWith( elem, [ animation, gotoEnd ] );
 				} else {
 					deferred.rejectWith( elem, [ animation, gotoEnd ] );
@@ -370,8 +333,12 @@ function Animation( elem, properties, options ) {
 	propFilter( props, animation.opts.specialEasing );
 
 	for ( ; index < length ; index++ ) {
-		result = animationPrefilters[index].call(animation, elem, props, animation.opts);
+		result = Animation.prefilters[index].call(animation, elem, props, animation.opts);
 		if ( result ) {
+			if (jQuery.isFunction(result.stop)) {
+				jQuery._queueHooks(animation.elem, animation.opts.queue).stop =
+					jQuery.proxy(result.stop, result);
+			}
 			return result;
 		}
 	}
@@ -398,12 +365,21 @@ function Animation( elem, properties, options ) {
 }
 
 jQuery.Animation = jQuery.extend( Animation, {
+
+	tweeners: {
+		"*": [function (prop, value) {
+			var tween = this.createTween(prop, value);
+			adjustCSS(tween.elem, prop, rcssNum.exec(value), tween);
+			return tween;
+		}]
+	},
+
 	tweener: function( props, callback ) {
 		if ( jQuery.isFunction( props ) ) {
 			callback = props;
 			props = [ "*" ];
 		} else {
-			props = props.split(" ");
+			props = props.match(rnotwhite);
 		}
 
 		var prop,
@@ -412,16 +388,18 @@ jQuery.Animation = jQuery.extend( Animation, {
 
 		for ( ; index < length ; index++ ) {
 			prop = props[ index ];
-			tweeners[prop] = tweeners[prop] || [];
-			tweeners[prop].unshift(callback);
+			Animation.tweeners[prop] = Animation.tweeners[prop] || [];
+			Animation.tweeners[prop].unshift(callback);
 		}
 	},
 
+	prefilters: [defaultPrefilter],
+
 	prefilter: function( callback, prepend ) {
 		if ( prepend ) {
-			animationPrefilters.unshift(callback);
+			Animation.prefilters.unshift(callback);
 		} else {
-			animationPrefilters.push(callback);
+			Animation.prefilters.push(callback);
 		}
 	}
 });
@@ -435,7 +413,8 @@ jQuery.speed = function( speed, easing, fn ) {
 	};
 
 	opt.duration = jQuery.fx.off ? 0 : typeof opt.duration === "number" ? opt.duration :
-		opt.duration in jQuery.fx.speeds ? jQuery.fx.speeds[opt.duration] : jQuery.fx.speeds._default;
+		opt.duration in jQuery.fx.speeds ?
+			jQuery.fx.speeds[opt.duration] : jQuery.fx.speeds._default;
 
 	// normalize opt.queue - true/undefined/null -> "fx"
 	if ( opt.queue == null || opt.queue === true ) {
@@ -471,6 +450,7 @@ jQuery.speed = function( speed, easing, fn ) {
 		var empty = jQuery.isEmptyObject( prop ),
 			optall = jQuery.speed( speed, easing, callback ),
 			doAnimation = function() {
+
 				// Operate on a copy of prop so per-property easing won't be lost
 				var anim = Animation( this, jQuery.extend( {}, prop ), optall );
 
@@ -520,7 +500,9 @@ jQuery.speed = function( speed, easing, fn ) {
 			}
 
 			for ( index = timers.length; index--; ) {
-				if (timers[index].elem === this && (type == null || timers[index].queue === type)) {
+				if (timers[index].elem === this &&
+					( type == null || timers[index].queue === type )) {
+
 					timers[ index ].anim.stop( gotoEnd );
 					dequeue = false;
 					timers.splice( index, 1 );
@@ -611,6 +593,7 @@ jQuery.fx.tick = function() {
 
 	for ( ; i < timers.length; i++ ) {
 		timer = timers[ i ];
+
 		// Checks the timer has not already been removed
 		if ( !timer() && timers[ i ] === timer ) {
 			timers.splice( i--, 1 );
@@ -636,18 +619,19 @@ jQuery.fx.interval = 13;
 
 jQuery.fx.start = function() {
 	if ( !timerId ) {
-		timerId = setInterval(jQuery.fx.tick, jQuery.fx.interval);
+		timerId = window.setInterval(jQuery.fx.tick, jQuery.fx.interval);
 	}
 };
 
 jQuery.fx.stop = function() {
-	clearInterval(timerId);
+	window.clearInterval(timerId);
 	timerId = null;
 };
 
 jQuery.fx.speeds = {
 	slow: 600,
 	fast: 200,
+
 	// Default speed
 	_default: 400
 };

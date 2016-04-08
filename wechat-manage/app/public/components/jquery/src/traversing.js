@@ -1,12 +1,15 @@
 define([
 	"./core",
+	"./traversing/var/dir",
+	"./traversing/var/siblings",
 	"./traversing/var/rneedsContext",
 	"./core/init",
 	"./traversing/findFilter",
 	"./selector"
-], function (jQuery, rneedsContext) {
+], function (jQuery, dir, siblings, rneedsContext) {
 
 var rparentsprev = /^(?:parents|prev(?:Until|All))/,
+
 	// methods guaranteed to produce a unique set when starting from a unique set
 	guaranteedUnique = {
 		children: true,
@@ -14,33 +17,6 @@ var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 		next: true,
 		prev: true
 	};
-
-	jQuery.extend({
-		dir: function (elem, dir, until) {
-			var matched = [],
-				cur = elem[dir];
-
-			while (cur && cur.nodeType !== 9 && (until === undefined || cur.nodeType !== 1 || !jQuery(cur).is(until))) {
-				if (cur.nodeType === 1) {
-					matched.push(cur);
-			}
-				cur = cur[dir];
-			}
-			return matched;
-		},
-
-		sibling: function (n, elem) {
-			var r = [];
-
-			for (; n; n = n.nextSibling) {
-				if (n.nodeType === 1 && n !== elem) {
-					r.push(n);
-			}
-		}
-
-			return r;
-		}
-	});
 
 	jQuery.fn.extend({
 	has: function( target ) {
@@ -68,13 +44,14 @@ var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 
 		for ( ; i < l; i++ ) {
 			for (cur = this[i]; cur && cur !== context; cur = cur.parentNode) {
+
 				// Always skip document fragments
-				if (cur.nodeType < 11 && (pos ?
+				if (cur.nodeType < 11 && ( pos ?
 					pos.index(cur) > -1 :
 
 					// Don't pass non-elements to Sizzle
 					cur.nodeType === 1 &&
-					jQuery.find.matchesSelector(cur, selectors))) {
+					jQuery.find.matchesSelector(cur, selectors) )) {
 
 					matched.push( cur );
 					break;
@@ -82,7 +59,7 @@ var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 			}
 		}
 
-		return this.pushStack(matched.length > 1 ? jQuery.unique(matched) : matched);
+		return this.pushStack(matched.length > 1 ? jQuery.uniqueSort(matched) : matched);
 	},
 
 	// Determine the position of an element within
@@ -101,13 +78,14 @@ var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 
 		// Locate the position of the desired element
 		return jQuery.inArray(
+
 			// If it receives a jQuery object, the first element is used
 			elem.jquery ? elem[0] : elem, this);
 	},
 
 	add: function( selector, context ) {
 		return this.pushStack(
-			jQuery.unique(
+			jQuery.uniqueSort(
 				jQuery.merge( this.get(), jQuery( selector, context ) )
 			)
 		);
@@ -134,10 +112,10 @@ function sibling( cur, dir ) {
 		return parent && parent.nodeType !== 11 ? parent : null;
 	},
 	parents: function( elem ) {
-		return jQuery.dir(elem, "parentNode");
+		return dir(elem, "parentNode");
 	},
 	parentsUntil: function( elem, i, until ) {
-		return jQuery.dir(elem, "parentNode", until);
+		return dir(elem, "parentNode", until);
 	},
 	next: function( elem ) {
 		return sibling( elem, "nextSibling" );
@@ -146,22 +124,22 @@ function sibling( cur, dir ) {
 		return sibling( elem, "previousSibling" );
 	},
 	nextAll: function( elem ) {
-		return jQuery.dir(elem, "nextSibling");
+		return dir(elem, "nextSibling");
 	},
 	prevAll: function( elem ) {
-		return jQuery.dir(elem, "previousSibling");
+		return dir(elem, "previousSibling");
 	},
 	nextUntil: function( elem, i, until ) {
-		return jQuery.dir(elem, "nextSibling", until);
+		return dir(elem, "nextSibling", until);
 	},
 	prevUntil: function( elem, i, until ) {
-		return jQuery.dir(elem, "previousSibling", until);
+		return dir(elem, "previousSibling", until);
 	},
 	siblings: function( elem ) {
-		return jQuery.sibling(( elem.parentNode || {} ).firstChild, elem);
+		return siblings(( elem.parentNode || {} ).firstChild, elem);
 	},
 	children: function( elem ) {
-		return jQuery.sibling(elem.firstChild);
+		return siblings(elem.firstChild);
 	},
 	contents: function( elem ) {
 		return jQuery.nodeName( elem, "iframe" ) ?
@@ -181,9 +159,10 @@ function sibling( cur, dir ) {
 		}
 
 		if ( this.length > 1 ) {
+
 			// Remove duplicates
 			if ( !guaranteedUnique[ name ] ) {
-				ret = jQuery.unique(ret);
+				ret = jQuery.uniqueSort(ret);
 			}
 
 			// Reverse order for parents* and prev-derivatives
