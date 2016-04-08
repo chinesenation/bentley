@@ -7,6 +7,13 @@
     app.controller('HomeCtrl', HomeCtrl);
     function HomeCtrl() {
         var self = this;
-        self.test = "home test";
+        self.username = "未登录";
+        self.login = function () {
+            self.username = "测试用户";
+
+        };
+        self.logout = function () {
+            self.username = "未登录";
+        }
     }
 })();

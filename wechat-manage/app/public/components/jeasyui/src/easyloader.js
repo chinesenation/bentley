@@ -1,7 +1,7 @@
-/**
- * jQuery EasyUI 1.4.4
- * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+﻿/**
+ * jQuery EasyUI 1.4.5
+ *
+ * Copyright (c) 2009-2016 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
@@ -240,7 +240,7 @@
 					callback.call(script);
 				}
 			}
-		};;
+		};
 		document.getElementsByTagName("head")[0].appendChild(script);
 	}
 	

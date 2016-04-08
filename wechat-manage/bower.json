@@ -17,7 +17,6 @@
     "bootstrap":"~3.3.6",
     "jquery":"~1.12.3",
     "jquery-ui":"~1.11.4",
-    "ngstorage":"~0.3.9",
-    "jeasyui":"~1.4.4"
+    "ngstorage": "~0.3.9"
   }
 }

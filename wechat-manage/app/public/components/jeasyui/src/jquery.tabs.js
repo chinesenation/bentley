@@ -1,7 +1,7 @@
-/**
- * jQuery EasyUI 1.4.4
- * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+﻿/**
+ * jQuery EasyUI 1.4.5
+ *
+ * Copyright (c) 2009-2016 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
@@ -257,7 +257,7 @@
 	}
 	
 	function bindEvents(container){
-		var state = $.data(container, 'tabs');;
+		var state = $.data(container, 'tabs');
 		var opts = state.options;
 		$(container).children('div.tabs-header').unbind().bind('click', function(e){
 			if ($(e.target).hasClass('tabs-scroller-left')){
@@ -653,7 +653,7 @@
 	 * do first select action, if no tab is setted the first tab will be selected.
 	 */
 	function doFirstSelect(container){
-		var state = $.data(container, 'tabs');;
+		var state = $.data(container, 'tabs');
 		var tabs = state.tabs;
 		for(var i=0; i<tabs.length; i++){
 			var opts = tabs[i].panel('options');
